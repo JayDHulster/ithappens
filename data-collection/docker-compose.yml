@@ -1,0 +1,53 @@
+version: '1'
+
+services:
+  redis:
+    image: redis:latest
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis:/data'
+
+  ingest:
+    image: ingest:latest
+    build:
+      context: ./ingest
+
+  influxdb:
+    image: influxdb:latest
+    ports:
+      - '8086:8086'
+    volumes:
+      - 'influxdb:/data'
+    environment:
+      - INFLUXDB_DB=${INFLUXDB_DB}
+      - INFLUXDB_ADMIN_USER=${INFLUXDB_ADMIN_USER}
+      - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_ADMIN_PASSWORD}
+
+  grafana:
+    image: grafana/grafana:7.5.7
+    ports:
+      - 3000:3000
+    links:
+      - influxdb
+    restart: unless-stopped
+    volumes:
+      - ./grafana/provisioning:/data
+      - grafana:/data
+
+  process:
+    image: process:latest
+    build:
+      context: ./process
+
+volumes:
+  redis:
+    driver: local
+  influxdb:
+    driver: local
+  grafana:
+    driver: local

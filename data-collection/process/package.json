@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@influxdata/influxdb-client": "^1.33.2",
+    "dotenv": "^16.0.3",
+    "influxdb": "^0.0.1",
+    "redis": "^4.6.5"
+  }
+}
