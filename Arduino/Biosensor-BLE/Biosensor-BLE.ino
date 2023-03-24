@@ -4,16 +4,17 @@
 BLEService pressureService("2781"); // BLE LED Service
 
 // BLE Pressure Characteristic - custom 128-bit UUID, read and writable by central
-BLEFloatCharacteristic pressurizer("2A57", BLERead | BLENotify);
-// BLEStringCharacteristic pressurizer("2A57", BLERead | BLENotify, 6);
+BLEIntCharacteristic pressurizer("2A57", BLERead | BLENotify); // send data as integer
+// BLEFloatCharacteristic pressurizer("2A57", BLERead | BLENotify); // send data as float !!! does not work with app
+// BLEStringCharacteristic pressurizer("2A57", BLERead | BLENotify, 6); // send data as a string
 
 short pressZero = 412;        //put the highest raw reading you see here at atmospheric pressure
-short pressMax = 30;         //reduce pressure rating by %66 if 3.3v logic but still use 5v input
+short pressMax = 20;         //reduce pressure rating by %66 if 3.3v logic but still use 5v input
 float resolution = 3686.4; //921.6;      //3686.4 for Due/Zero and add analogReadResolution(12) to void setup
 byte analogPin = A1;           //transducer pin number
-boolean autoCalibrate = true; //will automatically select highest raw reading in 10sec period
+boolean autoCalibrate = false; //will automatically select highest raw reading in 10sec period
 
-int timeDelay = 1000; //Delay waarin sensor opmeet (en dus ook data uitstuurt)
+int timeDelay = 3000; //Delay waarin sensor opmeet (en dus ook data uitstuurt)
 
 // https://forum.arduino.cc/t/pressure-transducer-code/362754/36
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,13 +51,14 @@ void setup()
   BLE.addService(pressureService);
 
   // set the initial value for the characteristic:
-  pressurizer.writeValue(00.00);
+  pressurizer.writeValue(0);
   // pressurizer.writeValue("Start"); // string
 
   // start advertising
   BLE.advertise();
 
   Serial.println("BLE Pressure Peripheral");
+  Serial.println(BLE.address());
 }
 
 void loop()
@@ -95,8 +97,8 @@ void loop()
     buf += pressMmhg;
     buf += F(" meters: ");
     buf += pressMeter;
-    Serial.println(buf);
-    pressurizer.writeValue(pressMmhg);  
+    Serial.println(buf); 
+    pressurizer.writeValue(int(pressMmhg*100)); // send raw data  
     // pressurizer.writeValue(String(pressMmhg, 2)); // Stuur data via bluetooth
     if (autoCalibrate == true && calibrate >= 10)
     {
