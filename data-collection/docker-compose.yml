@@ -12,10 +12,13 @@ services:
     volumes:
       - 'redis:/data'
 
-  ingest:
-    image: ingest:latest
+  gobbler:
+    image: gobbler:latest
     build:
-      context: ./ingest
+      context: ./gobbler
+    environment:
+      - TZ=Europe/Brussels
+
 
   influxdb:
     image: influxdb:latest

@@ -9,12 +9,12 @@ BLEIntCharacteristic pressurizer("2A57", BLERead | BLENotify); // send data as i
 // BLEStringCharacteristic pressurizer("2A57", BLERead | BLENotify, 6); // send data as a string
 
 short pressZero = 412;        //put the highest raw reading you see here at atmospheric pressure
-short pressMax = 20;         //reduce pressure rating by %66 if 3.3v logic but still use 5v input
+short pressMax = 30;         //reduce pressure rating by %66 if 3.3v logic but still use 5v input
 float resolution = 3686.4; //921.6;      //3686.4 for Due/Zero and add analogReadResolution(12) to void setup
 byte analogPin = A1;           //transducer pin number
 boolean autoCalibrate = false; //will automatically select highest raw reading in 10sec period
 
-int timeDelay = 3000; //Delay waarin sensor opmeet (en dus ook data uitstuurt)
+int timeDelay = 2500; //Delay waarin sensor opmeet (en dus ook data uitstuurt)
 
 // https://forum.arduino.cc/t/pressure-transducer-code/362754/36
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

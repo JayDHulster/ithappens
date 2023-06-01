@@ -1896,7 +1896,7 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 4adada42-583e-40fb-a63c-0b95458ee222)
   )
-  (text "Arduino Nano met sensor" (at 152.4 104.14 0)
+  (text "Arduino Nano BLE met sensor" (at 152.4 104.14 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 6dddb189-0ade-4105-8f2c-908170dd3ff2)
   )

@@ -5,11 +5,12 @@ require('dotenv').config()
 console.log("SCRIPT STARTED");
 
 const url = 'http://influxdb:8086'
-const token = process.env.INFLUX_TOKEN
+// const token = process.env.INFLUX_TOKEN
+const token = 'LOjUMPGehdZ3SIFy01jpNH-pdGyFpuEYWDDdZeFv5MV3h3fEvNy5DFiC7VqCOTGvhZ4Hw2txrsZATLRcKBPo9A=='
 const client = new InfluxDB({url, token})
 
 let org = `vives`
-let bucket = `dust`
+let bucket = `biosensor`
 
 let writeApi = client.getWriteApi(org, bucket, 'ns')
 
@@ -27,18 +28,14 @@ await redisClient.connect();
 
 while(1) {
 
-  const stringdata = await redisClient.BLPOP('dust', 0);
+  const stringdata = await redisClient.BLPOP('pressure', 0);
   const data = JSON.parse(stringdata.element)
 
 try {
-let point = new Point('dust')
-.timestamp( new Date(data.received_at))
-.intField('moisture_lv1', data.uplink_message.decoded_payload.moistureLevel_1)
-.intField('moisture_lv2', data.uplink_message.decoded_payload.moistureLevel_2)
-.intField('moisture_lv3', data.uplink_message.decoded_payload.moistureLevel_3)
-.intField('moisture_lv4', data.uplink_message.decoded_payload.moistureLevel_4)
-.floatField('battery_voltage', data.uplink_message.decoded_payload.batteryVoltage)
-.tag('device_id', data.end_device_ids.device_id)
+let point = new Point('pressure')
+.timestamp( new Date(data.timestamp))
+.floatField('value', data.value)
+.tag('device', 'biosensor')
 writeApi.writePoint(point)
 console.log(point)
 } catch (error) {
