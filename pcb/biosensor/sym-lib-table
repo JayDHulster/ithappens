@@ -1,3 +1,4 @@
 (sym_lib_table
+  (version 7)
   (lib (name "biosensor_lib")(type "KiCad")(uri "${KIPRJMOD}/biosensor_lib.kicad_sym")(options "")(descr ""))
 )
