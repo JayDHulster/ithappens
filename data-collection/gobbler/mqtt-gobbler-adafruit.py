@@ -1,23 +1,19 @@
 from datetime import datetime
 import pytz
-import paho.mqtt.client as mqtt
+import sys
+import os
+from dotenv import load_dotenv
+from Adafruit_IO import MQTTClient
 import redis
+load_dotenv()
+
+ADAFRUIT_USER = os.getenv("ADAFRUIT_USER")
+ADAFRUIT_IO_KEY = os.getenv("ADAFRUIT_IO_KEY")
+ADAFRUIT_FEED = os.getenv("ADAFRUIT_FEED")
 
 # create a redis client instance
 r = redis.Redis(host='redis', port=6379, db=0)
 print('Connection set up to Redis!')
-
-# MQTT broker information
-broker_address = "mqtt.devbit.be"
-broker_port = 1883
-
-# Topic to subscribe to
-topic = "biosensor/id_123/pressure"
-
-# Callback function for MQTT connection
-def on_connect(client, userdata, flags, rc):
-    print("Connected to MQTT broker")
-    client.subscribe(topic)
 
 
 # Define callback functions which will be called when certain events happen.
